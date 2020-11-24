@@ -1,29 +1,37 @@
-module.exports = Shape;
-
-var Shape = require('./Shape');
-var Vec3 = require('../math/Vec3');
-var Quaternion = require('../math/Quaternion');
-var Material = require('../material/Material');
+import {Vec3} from '../math/Vec3';
+import {Material} from '../material/Material';
 
 /**
  * Base class for shapes
  * @class Shape
- * @constructor
- * @param {object} [options]
- * @param {number} [options.collisionFilterGroup=1]
- * @param {number} [options.collisionFilterMask=-1]
- * @param {number} [options.collisionResponse=true]
- * @param {number} [options.material=null]
  * @author schteppe
  */
-function Shape(options){
-    options = options || {};
+export class Shape {
+    static idCounter = 0;
+
+    /**
+     * The available shape types.
+     * @static
+     * @property types
+     * @type {Object}
+     */
+    static types = {
+        SPHERE: 1,
+        PLANE: 2,
+        BOX: 4,
+        COMPOUND: 8,
+        CONVEXPOLYHEDRON: 16,
+        HEIGHTFIELD: 32,
+        PARTICLE: 64,
+        CYLINDER: 128,
+        TRIMESH: 256
+    };
 
     /**
      * Identifyer of the Shape.
      * @property {number} id
      */
-    this.id = Shape.idCounter++;
+    id = Shape.idCounter++;
 
     /**
      * The type of this shape. Must be set to an int > 0 by subclasses.
@@ -31,87 +39,91 @@ function Shape(options){
      * @type {Number}
      * @see Shape.types
      */
-    this.type = options.type || 0;
+    type;
 
     /**
      * The local bounding sphere radius of this shape.
      * @property {Number} boundingSphereRadius
      */
-    this.boundingSphereRadius = 0;
+    boundingSphereRadius;
 
     /**
      * Whether to produce contact forces when in contact with other bodies. Note that contacts will be generated, but they will be disabled.
      * @property {boolean} collisionResponse
      */
-    this.collisionResponse = options.collisionResponse ? options.collisionResponse : true;
+    collisionResponse;
 
     /**
      * @property {Number} collisionFilterGroup
      */
-    this.collisionFilterGroup = options.collisionFilterGroup !== undefined ? options.collisionFilterGroup : 1;
+    collisionFilterGroup;
 
     /**
      * @property {Number} collisionFilterMask
      */
-    this.collisionFilterMask = options.collisionFilterMask !== undefined ? options.collisionFilterMask : -1;
+    collisionFilterMask;
 
     /**
      * @property {Material} material
      */
-    this.material = options.material ? options.material : null;
+    material;
 
     /**
      * @property {Body} body
      */
-    this.body = null;
+    body;
+
+    /**
+     * @param {object} [options]
+     * @param {number} [options.collisionFilterGroup=1]
+     * @param {number} [options.collisionFilterMask=-1]
+     * @param {number} [options.collisionResponse=true]
+     * @param {number} [options.material=null]
+     */
+    constructor(options) {
+        const {
+            type = 0,
+            collisionFilterGroup = 1,
+            collisionFilterMask = -1,
+            collisionResponse = true,
+            material = null
+        } = Object.assign({}, options);
+
+        this.type = type;
+        this.boundingSphereRadius = 0;
+        this.collisionFilterGroup = collisionFilterGroup;
+        this.collisionFilterMask = collisionFilterMask;
+        this.collisionResponse = collisionResponse;
+        this.material = material;
+        this.body = null;
+    }
+
+    /**
+     * Computes the bounding sphere radius. The result is stored in the property .boundingSphereRadius
+     * @method updateBoundingSphereRadius
+     */
+    updateBoundingSphereRadius() {
+        throw "computeBoundingSphereRadius() not implemented for shape type " + this.type;
+    }
+
+    /**
+     * Get the volume of this shape
+     * @method volume
+     * @return {Number}
+     */
+    volume() {
+        throw "volume() not implemented for shape type " + this.type;
+    }
+
+    /**
+     * Calculates the inertia in the local frame for this shape.
+     * @method calculateLocalInertia
+     * @param {Number} mass
+     * @param {Vec3} target
+     * @see http://en.wikipedia.org/wiki/List_of_moments_of_inertia
+     */
+    calculateLocalInertia(mass, target) {
+        throw "calculateLocalInertia() not implemented for shape type " + this.type;
+    }
 }
-Shape.prototype.constructor = Shape;
-
-/**
- * Computes the bounding sphere radius. The result is stored in the property .boundingSphereRadius
- * @method updateBoundingSphereRadius
- */
-Shape.prototype.updateBoundingSphereRadius = function(){
-    throw "computeBoundingSphereRadius() not implemented for shape type "+this.type;
-};
-
-/**
- * Get the volume of this shape
- * @method volume
- * @return {Number}
- */
-Shape.prototype.volume = function(){
-    throw "volume() not implemented for shape type "+this.type;
-};
-
-/**
- * Calculates the inertia in the local frame for this shape.
- * @method calculateLocalInertia
- * @param {Number} mass
- * @param {Vec3} target
- * @see http://en.wikipedia.org/wiki/List_of_moments_of_inertia
- */
-Shape.prototype.calculateLocalInertia = function(mass,target){
-    throw "calculateLocalInertia() not implemented for shape type "+this.type;
-};
-
-Shape.idCounter = 0;
-
-/**
- * The available shape types.
- * @static
- * @property types
- * @type {Object}
- */
-Shape.types = {
-    SPHERE:1,
-    PLANE:2,
-    BOX:4,
-    COMPOUND:8,
-    CONVEXPOLYHEDRON:16,
-    HEIGHTFIELD:32,
-    PARTICLE:64,
-    CYLINDER:128,
-    TRIMESH:256
-};
 

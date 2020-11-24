@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="fe8ec0e7-a8b6-4a7a-9f0a-e3d06fca180e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/Cannon.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/collision/AABB.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/AABB.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/collision/ArrayCollisionMatrix.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/ArrayCollisionMatrix.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/collision/Broadphase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/Broadphase.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/collision/GridBroadphase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/GridBroadphase.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/collision/NaiveBroadphase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/NaiveBroadphase.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/collision/ObjectCollisionMatrix.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/ObjectCollisionMatrix.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/collision/OverlapKeeper.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/OverlapKeeper.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/collision/Ray.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/Ray.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/collision/RaycastResult.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/RaycastResult.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/collision/SAPBroadphase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/SAPBroadphase.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constraints/ConeTwistConstraint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/ConeTwistConstraint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constraints/Constraint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/Constraint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constraints/DistanceConstraint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/DistanceConstraint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constraints/HingeConstraint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/HingeConstraint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constraints/LockConstraint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/LockConstraint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constraints/PointToPointConstraint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/PointToPointConstraint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/equations/ConeEquation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/equations/ConeEquation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/equations/ContactEquation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/equations/ContactEquation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/equations/Equation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/equations/Equation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/equations/FrictionEquation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/equations/FrictionEquation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/equations/RotationalEquation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/equations/RotationalEquation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/equations/RotationalMotorEquation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/equations/RotationalMotorEquation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/ContactMaterial.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/ContactMaterial.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/Material.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/Material.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/math/JacobianElement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/JacobianElement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/math/Mat3.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/Mat3.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/math/Quaternion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/Quaternion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/math/Transform.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/Transform.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/math/Vec3.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/Vec3.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/Body.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/Body.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/RaycastVehicle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/RaycastVehicle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/RigidVehicle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/RigidVehicle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/SPHSystem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/SPHSystem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/Spring.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/Spring.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/WheelInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/WheelInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shapes/Box.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/shapes/Box.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shapes/ConvexPolyhedron.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/shapes/ConvexPolyhedron.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shapes/Cylinder.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/shapes/Cylinder.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shapes/Heightfield.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/shapes/Heightfield.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shapes/Particle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/shapes/Particle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shapes/Plane.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/shapes/Plane.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shapes/Shape.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/shapes/Shape.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shapes/Sphere.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/shapes/Sphere.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shapes/Trimesh.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/shapes/Trimesh.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/solver/GSSolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/solver/GSSolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/solver/Solver.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/solver/Solver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/solver/SplitSolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/solver/SplitSolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/EventTarget.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/EventTarget.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/Octree.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Octree.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/Pool.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Pool.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/TupleDictionary.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/TupleDictionary.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/Utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/Vec3Pool.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Vec3Pool.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/world/Narrowphase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Narrowphase.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/world/World.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/World.js" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
+  <component name="ProjectId" id="1k34KIOIV84tves9S78NuOmNiTw" />
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="Settings.JavaScript" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fe8ec0e7-a8b6-4a7a-9f0a-e3d06fca180e" name="Default Changelist" comment="" />
+      <created>1604915875400</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1604915875400</updated>
+      <workItem from="1604915878819" duration="3810000" />
+      <workItem from="1604993160724" duration="25664000" />
+      <workItem from="1605076865733" duration="14372000" />
+      <workItem from="1605102520551" duration="100000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
