@@ -1,7 +1,6 @@
 /**
  * Constraint equation solver base class.
  * @class Solver
- * @constructor
  * @author schteppe / https://github.com/schteppe
  */
 export class Solver {

@@ -63,7 +63,7 @@ export class Trimesh extends Shape {
     /**
      * The local AABB of the mesh.
      * @property aabb
-     * @type {Array}
+     * @type {AABB}
      */
     aabb;
 
@@ -113,11 +113,11 @@ export class Trimesh extends Shape {
      * @method updateTree
      */
     updateTree() {
-        var tree = this.tree;
+        const tree = this.tree;
 
         tree.reset();
         tree.aabb.copy(this.aabb);
-        var scale = this.scale; // The local mesh AABB is scaled, but the octree AABB should be unscaled
+        const scale = this.scale; // The local mesh AABB is scaled, but the octree AABB should be unscaled
         tree.aabb.lowerBound.x *= 1 / scale.x;
         tree.aabb.lowerBound.y *= 1 / scale.y;
         tree.aabb.lowerBound.z *= 1 / scale.z;
@@ -126,16 +126,16 @@ export class Trimesh extends Shape {
         tree.aabb.upperBound.z *= 1 / scale.z;
 
         // Insert all triangles
-        var triangleAABB = new AABB();
-        var a = new Vec3();
-        var b = new Vec3();
-        var c = new Vec3();
-        var points = [a, b, c];
-        for (var i = 0; i < this.indices.length / 3; i++) {
+        const triangleAABB = new AABB();
+        const a = new Vec3();
+        const b = new Vec3();
+        const c = new Vec3();
+        const points = [a, b, c];
+        for (let i = 0; i < this.indices.length / 3; i++) {
             //this.getTriangleVertices(i, a, b, c);
 
             // Get unscaled triangle verts
-            var i3 = i * 3;
+            const i3 = i * 3;
             this._getUnscaledVertex(this.indices[i3], a);
             this._getUnscaledVertex(this.indices[i3 + 1], b);
             this._getUnscaledVertex(this.indices[i3 + 2], c);
@@ -156,12 +156,12 @@ export class Trimesh extends Shape {
         unscaledAABB.copy(aabb);
 
         // Scale it to local
-        var scale = this.scale;
-        var isx = scale.x;
-        var isy = scale.y;
-        var isz = scale.z;
-        var l = unscaledAABB.lowerBound;
-        var u = unscaledAABB.upperBound;
+        const scale = this.scale;
+        const isx = scale.x;
+        const isy = scale.y;
+        const isz = scale.z;
+        const l = unscaledAABB.lowerBound;
+        const u = unscaledAABB.upperBound;
         l.x /= isx;
         l.y /= isy;
         l.z /= isz;
@@ -177,8 +177,8 @@ export class Trimesh extends Shape {
      * @param {Vec3} scale
      */
     setScale(scale) {
-        var wasUniform = this.scale.x === this.scale.y === this.scale.z;
-        var isUniform = scale.x === scale.y === scale.z;
+        const wasUniform = this.scale.x === this.scale.y === this.scale.z;
+        const isUniform = scale.x === scale.y === scale.z;
 
         if (!(wasUniform && isUniform)) {
             // Non-uniform scaling. Need to update normals.
@@ -194,14 +194,14 @@ export class Trimesh extends Shape {
      * @method updateNormals
      */
     updateNormals() {
-        var n = computeNormals_n;
+        const n = computeNormals_n;
 
         // Generate normals
-        var normals = this.normals;
-        for (var i = 0; i < this.indices.length / 3; i++) {
-            var i3 = i * 3;
+        const normals = this.normals;
+        for (let i = 0; i < this.indices.length / 3; i++) {
+            const i3 = i * 3;
 
-            var a = this.indices[i3],
+            const a = this.indices[i3],
                 b = this.indices[i3 + 1],
                 c = this.indices[i3 + 2];
 
@@ -222,24 +222,24 @@ export class Trimesh extends Shape {
      * @method updateEdges
      */
     updateEdges() {
-        var edges = {};
-        var add = function (indexA, indexB) {
-            var key = a < b ? a + '_' + b : b + '_' + a;
+        const edges = {};
+        const add = function (indexA, indexB) {
+            const key = a < b ? a + '_' + b : b + '_' + a;
             edges[key] = true;
         };
-        for (var i = 0; i < this.indices.length / 3; i++) {
-            var i3 = i * 3;
-            var a = this.indices[i3],
+        for (let i = 0; i < this.indices.length / 3; i++) {
+            const i3 = i * 3;
+            const a = this.indices[i3],
                 b = this.indices[i3 + 1],
                 c = this.indices[i3 + 2];
             add(a, b);
             add(b, c);
             add(c, a);
         }
-        var keys = Object.keys(edges);
+        const keys = Object.keys(edges);
         this.edges = new Int16Array(keys.length * 2);
-        for (var i = 0; i < keys.length; i++) {
-            var indices = keys[i].split('_');
+        for (let i = 0; i < keys.length; i++) {
+            const indices = keys[i].split('_');
             this.edges[2 * i] = parseInt(indices[0], 10);
             this.edges[2 * i + 1] = parseInt(indices[1], 10);
         }
@@ -253,7 +253,7 @@ export class Trimesh extends Shape {
      * @param  {Vec3} vertexStore Where to store the result
      */
     getEdgeVertex(edgeIndex, firstOrSecond, vertexStore) {
-        var vertexIndex = this.edges[edgeIndex * 2 + (firstOrSecond ? 1 : 0)];
+        const vertexIndex = this.edges[edgeIndex * 2 + (firstOrSecond ? 1 : 0)];
         this.getVertex(vertexIndex, vertexStore);
     }
 
@@ -264,8 +264,8 @@ export class Trimesh extends Shape {
      * @param  {Vec3} vectorStore
      */
     getEdgeVector(edgeIndex, vectorStore) {
-        var va = getEdgeVector_va;
-        var vb = getEdgeVector_vb;
+        const va = getEdgeVector_va;
+        const vb = getEdgeVector_vb;
         this.getEdgeVertex(edgeIndex, 0, va);
         this.getEdgeVertex(edgeIndex, 1, vb);
         vb.vsub(va, vectorStore);
@@ -280,29 +280,31 @@ export class Trimesh extends Shape {
      * @param {Vec3} vc
      * @param {Vec3} target
      */
-    static computeNormal(va, vb, vc, target) {
+    static computeNormal(va, vb, vc, target = new Vec3()) {
         vb.vsub(va, ab);
         vc.vsub(vb, cb);
         cb.cross(ab, target);
         if (!target.isZero()) {
             target.normalize();
         }
+
+        return target;
     }
 
     /**
      * Get vertex i.
      * @method getVertex
      * @param  {number} i
-     * @param  {Vec3} out
+     * @param  {Vec3} target
      * @return {Vec3} The "out" vector object
      */
-    getVertex(i, out) {
-        var scale = this.scale;
-        this._getUnscaledVertex(i, out);
-        out.x *= scale.x;
-        out.y *= scale.y;
-        out.z *= scale.z;
-        return out;
+    getVertex(i, target = new Vec3()) {
+        const scale = this.scale;
+        this._getUnscaledVertex(i, target);
+        target.x *= scale.x;
+        target.y *= scale.y;
+        target.z *= scale.z;
+        return target;
     }
 
     /**
@@ -310,13 +312,13 @@ export class Trimesh extends Shape {
      * @private
      * @method _getUnscaledVertex
      * @param  {number} i
-     * @param  {Vec3} out
+     * @param  {Vec3} target
      * @return {Vec3} The "out" vector object
      */
-    _getUnscaledVertex(i, out) {
-        var i3 = i * 3;
-        var vertices = this.vertices;
-        return out.set(
+    _getUnscaledVertex(i, target = new Vec3()) {
+        const i3 = i * 3;
+        const vertices = this.vertices;
+        return target.set(
             vertices[i3],
             vertices[i3 + 1],
             vertices[i3 + 2]
@@ -329,13 +331,13 @@ export class Trimesh extends Shape {
      * @param  {number} i
      * @param  {Vec3} pos
      * @param  {Quaternion} quat
-     * @param  {Vec3} out
+     * @param  {Vec3} target
      * @return {Vec3} The "out" vector object
      */
-    getWorldVertex(i, pos, quat, out) {
-        this.getVertex(i, out);
-        Transform.pointToWorldFrame(pos, quat, out, out);
-        return out;
+    getWorldVertex(i, pos, quat, target = new Vec3()) {
+        this.getVertex(i, target);
+        Transform.pointToWorldFrame(pos, quat, target, target);
+        return target;
     }
 
     /**
@@ -347,7 +349,7 @@ export class Trimesh extends Shape {
      * @param  {Vec3} c
      */
     getTriangleVertices(i, a, b, c) {
-        var i3 = i * 3;
+        const i3 = i * 3;
         this.getVertex(this.indices[i3], a);
         this.getVertex(this.indices[i3 + 1], b);
         this.getVertex(this.indices[i3 + 2], c);
@@ -360,8 +362,8 @@ export class Trimesh extends Shape {
      * @param  {Vec3} target
      * @return {Vec3} The "target" vector object
      */
-    getNormal(i, target) {
-        var i3 = i * 3;
+    getNormal(i, target = new Vec3()) {
+        const i3 = i * 3;
         return target.set(
             this.normals[i3],
             this.normals[i3 + 1],
@@ -375,13 +377,15 @@ export class Trimesh extends Shape {
      * @param  {Vec3} target
      * @return {Vec3} The "target" vector object
      */
-    calculateLocalInertia(mass, target) {
+    calculateLocalInertia(mass, target = new Vec3()) {
         // Approximate with box inertia
         // Exact inertia calculation is overkill, but see http://geometrictools.com/Documentation/PolyhedralMassProperties.pdf for the correct way to do it
         this.computeLocalAABB(cli_aabb);
-        var x = cli_aabb.upperBound.x - cli_aabb.lowerBound.x,
+
+        const x = cli_aabb.upperBound.x - cli_aabb.lowerBound.x,
             y = cli_aabb.upperBound.y - cli_aabb.lowerBound.y,
             z = cli_aabb.upperBound.z - cli_aabb.lowerBound.z;
+
         return target.set(
             1.0 / 12.0 * mass * (2 * y * 2 * y + 2 * z * 2 * z),
             1.0 / 12.0 * mass * (2 * x * 2 * x + 2 * z * 2 * z),
@@ -395,17 +399,16 @@ export class Trimesh extends Shape {
      * @param  {AABB} aabb
      */
     computeLocalAABB(aabb) {
-        var l = aabb.lowerBound,
+        const l = aabb.lowerBound,
             u = aabb.upperBound,
             n = this.vertices.length,
-            vertices = this.vertices,
             v = computeLocalAABB_worldVert;
 
         this.getVertex(0, v);
         l.copy(v);
         u.copy(v);
 
-        for (var i = 0; i !== n; i++) {
+        for (let i = 0; i !== n; i++) {
             this.getVertex(i, v);
 
             if (v.x < l.x) {
@@ -428,7 +431,6 @@ export class Trimesh extends Shape {
         }
     }
 
-
     /**
      * Update the .aabb property
      * @method updateAABB
@@ -443,12 +445,12 @@ export class Trimesh extends Shape {
      */
     updateBoundingSphereRadius() {
         // Assume points are distributed with local (0,0,0) as center
-        var max2 = 0;
-        var vertices = this.vertices;
-        var v = new Vec3();
-        for (var i = 0, N = vertices.length / 3; i !== N; i++) {
+        let max2 = 0;
+        const vertices = this.vertices;
+        const v = new Vec3();
+        for (let i = 0, N = vertices.length / 3; i !== N; i++) {
             this.getVertex(i, v);
-            var norm2 = v.norm2();
+            const norm2 = v.norm2();
             if (norm2 > max2) {
                 max2 = norm2;
             }
@@ -497,8 +499,8 @@ export class Trimesh extends Shape {
         */
 
         // Faster approximation using local AABB
-        var frame = calculateWorldAABB_frame;
-        var result = calculateWorldAABB_aabb;
+        const frame = calculateWorldAABB_frame;
+        const result = calculateWorldAABB_aabb;
         frame.position = pos;
         frame.quaternion = quat;
         this.aabb.toWorldFrame(frame, result);
@@ -533,28 +535,28 @@ export class Trimesh extends Shape {
         tubularSegments = tubularSegments || 6;
         arc = arc || Math.PI * 2;
 
-        var vertices = [];
-        var indices = [];
+        const vertices = [];
+        const indices = [];
 
-        for (var j = 0; j <= radialSegments; j++) {
-            for (var i = 0; i <= tubularSegments; i++) {
-                var u = i / tubularSegments * arc;
-                var v = j / radialSegments * Math.PI * 2;
+        for (let j = 0; j <= radialSegments; j++) {
+            for (let i = 0; i <= tubularSegments; i++) {
+                const u = i / tubularSegments * arc;
+                const v = j / radialSegments * Math.PI * 2;
 
-                var x = (radius + tube * Math.cos(v)) * Math.cos(u);
-                var y = (radius + tube * Math.cos(v)) * Math.sin(u);
-                var z = tube * Math.sin(v);
+                const x = (radius + tube * Math.cos(v)) * Math.cos(u);
+                const y = (radius + tube * Math.cos(v)) * Math.sin(u);
+                const z = tube * Math.sin(v);
 
                 vertices.push(x, y, z);
             }
         }
 
-        for (var j = 1; j <= radialSegments; j++) {
-            for (var i = 1; i <= tubularSegments; i++) {
-                var a = (tubularSegments + 1) * j + i - 1;
-                var b = (tubularSegments + 1) * (j - 1) + i - 1;
-                var c = (tubularSegments + 1) * (j - 1) + i;
-                var d = (tubularSegments + 1) * j + i;
+        for (let j = 1; j <= radialSegments; j++) {
+            for (let i = 1; i <= tubularSegments; i++) {
+                const a = (tubularSegments + 1) * j + i - 1;
+                const b = (tubularSegments + 1) * (j - 1) + i - 1;
+                const c = (tubularSegments + 1) * (j - 1) + i;
+                const d = (tubularSegments + 1) * j + i;
 
                 indices.push(a, b, d);
                 indices.push(b, c, d);

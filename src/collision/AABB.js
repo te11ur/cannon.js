@@ -16,10 +16,6 @@ const transformIntoFrame_corners = [
 /**
  * Axis aligned bounding box class.
  * @class AABB
- * @constructor
- * @param {Object} [options]
- * @param {Vec3}   [options.upperBound]
- * @param {Vec3}   [options.lowerBound]
  */
 export class AABB {
     options;
@@ -38,11 +34,16 @@ export class AABB {
      */
     upperBound;
 
-    constructor(options) {
+    /**
+     * @param {Object} [options]
+     * @param {Vec3}   [options.upperBound]
+     * @param {Vec3}   [options.lowerBound]
+     */
+    constructor(options = {}) {
         const {
             lowerBound,
             upperBound
-        } = this.options = Object.assign({}, options);
+        } = options;
 
         this.lowerBound = new Vec3();
         this.upperBound = new Vec3();
@@ -65,7 +66,7 @@ export class AABB {
      * @param {number} skinSize
      * @return {AABB} The self object
      */
-    setFromPoints(points, position, quaternion, skinSize) {
+    setFromPoints(points, position = null, quaternion = null, skinSize = 0) {
         const l = this.lowerBound,
             u = this.upperBound,
             q = quaternion;
@@ -181,7 +182,7 @@ export class AABB {
         return overlapsX && overlapsY && overlapsZ;
     }
 
-// Mostly for debugging
+    // Mostly for debugging
     volume() {
         const l = this.lowerBound,
             u = this.upperBound;

@@ -23,14 +23,13 @@ export class Plane extends Shape {
     }
 
     computeWorldNormal(quat) {
-        var n = this.worldNormal;
+        const n = this.worldNormal;
         n.set(0, 0, 1);
         quat.vmult(n, n);
         this.worldNormalNeedsUpdate = false;
     }
 
-    calculateLocalInertia(mass, target) {
-        target = target || new Vec3();
+    calculateLocalInertia(mass, target = new Vec3()) {
         return target;
     }
 
@@ -42,7 +41,7 @@ export class Plane extends Shape {
         // The plane AABB is infinite, except if the normal is pointing along any axis
         tempNormal.set(0, 0, 1); // Default plane normal is z
         quat.vmult(tempNormal, tempNormal);
-        var maxVal = Number.MAX_VALUE;
+        const maxVal = Number.MAX_VALUE;
         min.set(-maxVal, -maxVal, -maxVal);
         max.set(maxVal, maxVal, maxVal);
 

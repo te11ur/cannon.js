@@ -34,7 +34,7 @@ export class Material {
     /**
      * @param {object} [options]
      */
-    constructor(options) {
+    constructor(options = {}) {
         // Backwards compatibility fix
         if (typeof options === 'string') {
             this.name = options;
@@ -44,7 +44,7 @@ export class Material {
             const {
                 restitution = -1,
                 friction = -1
-            } = Object.assign({}, options);
+            } = options;
 
             this.restitution = restitution;
             this.friction = friction;

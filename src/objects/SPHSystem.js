@@ -61,7 +61,7 @@ export class SPHSystem {
      * @param {Body} particle
      */
     remove(particle) {
-        var idx = this.particles.indexOf(particle);
+        const idx = this.particles.indexOf(particle);
         if (idx !== -1) {
             this.particles.splice(idx, 1);
             if (this.neighbors.length > this.particles.length) {
@@ -77,12 +77,12 @@ export class SPHSystem {
      * @param {Array} neighbors
      */
     getNeighbors(particle, neighbors) {
-        var N = this.particles.length,
+        const N = this.particles.length,
             id = particle.id,
             R2 = this.smoothingRadius * this.smoothingRadius,
             dist = SPHSystem_getNeighbors_dist;
-        for (var i = 0; i !== N; i++) {
-            var p = this.particles[i];
+        for (let i = 0; i !== N; i++) {
+            const p = this.particles[i];
             p.position.vsub(particle.position, dist);
             if (id !== p.id && dist.norm2() < R2) {
                 neighbors.push(p);
@@ -91,30 +91,30 @@ export class SPHSystem {
     }
 
     update() {
-        var N = this.particles.length,
+        const N = this.particles.length,
             dist = SPHSystem_update_dist,
             cs = this.speedOfSound,
             eps = this.eps;
 
-        for (var i = 0; i !== N; i++) {
-            var p = this.particles[i]; // Current particle
-            var neighbors = this.neighbors[i];
+        for (let i = 0; i !== N; i++) {
+            const p = this.particles[i]; // Current particle
+            const neighbors = this.neighbors[i];
 
             // Get neighbors
             neighbors.length = 0;
             this.getNeighbors(p, neighbors);
             neighbors.push(this.particles[i]); // Add current too
-            var numNeighbors = neighbors.length;
+            const numNeighbors = neighbors.length;
 
             // Accumulate density for the particle
-            var sum = 0.0;
-            for (var j = 0; j !== numNeighbors; j++) {
+            let sum = 0.0;
+            for (let j = 0; j !== numNeighbors; j++) {
 
                 //printf("Current particle has position %f %f %f\n",objects[id].pos.x(),objects[id].pos.y(),objects[id].pos.z());
                 p.position.vsub(neighbors[j].position, dist);
-                var len = dist.norm();
+                const len = dist.norm();
 
-                var weight = this.w(len);
+                const weight = this.w(len);
                 sum += neighbors[j].mass * weight;
             }
 
@@ -126,37 +126,36 @@ export class SPHSystem {
         // Add forces
 
         // Sum to these accelerations
-        var a_pressure = SPHSystem_update_a_pressure;
-        var a_visc = SPHSystem_update_a_visc;
-        var gradW = SPHSystem_update_gradW;
-        var r_vec = SPHSystem_update_r_vec;
-        var u = SPHSystem_update_u;
+        const a_pressure = SPHSystem_update_a_pressure;
+        const a_visc = SPHSystem_update_a_visc;
+        const gradW = SPHSystem_update_gradW;
+        const r_vec = SPHSystem_update_r_vec;
+        const u = SPHSystem_update_u;
 
-        for (var i = 0; i !== N; i++) {
+        for (let i = 0; i !== N; i++) {
 
-            var particle = this.particles[i];
+            const particle = this.particles[i];
 
             a_pressure.set(0, 0, 0);
             a_visc.set(0, 0, 0);
 
             // Init vars
-            var Pij;
-            var nabla;
-            var Vij;
+            let Pij;
+            let nabla;
 
             // Sum up for all other neighbors
-            var neighbors = this.neighbors[i];
-            var numNeighbors = neighbors.length;
+            const neighbors = this.neighbors[i];
+            const numNeighbors = neighbors.length;
 
             //printf("Neighbors: ");
-            for (var j = 0; j !== numNeighbors; j++) {
+            for (let j = 0; j !== numNeighbors; j++) {
 
-                var neighbor = neighbors[j];
+                const neighbor = neighbors[j];
                 //printf("%d ",nj);
 
                 // Get r once for all..
                 particle.position.vsub(neighbor.position, r_vec);
-                var r = r_vec.norm();
+                const r = r_vec.norm();
 
                 // Pressure contribution
                 Pij = -neighbor.mass * (this.pressures[i] / (this.densities[i] * this.densities[i] + eps) + this.pressures[j] / (this.densities[j] * this.densities[j] + eps));
@@ -187,21 +186,20 @@ export class SPHSystem {
     // Calculate the weight using the W(r) weightfunction
     w(r) {
         // 315
-        var h = this.smoothingRadius;
+        const h = this.smoothingRadius;
         return 315.0 / (64.0 * Math.PI * Math.pow(h, 9)) * Math.pow(h * h - r * r, 3);
     }
 
     // calculate gradient of the weight function
     gradw(rVec, resultVec) {
-        var r = rVec.norm(),
+        const r = rVec.norm(),
             h = this.smoothingRadius;
         rVec.mult(945.0 / (32.0 * Math.PI * Math.pow(h, 9)) * Math.pow((h * h - r * r), 2), resultVec);
     }
 
     // Calculate nabla(W)
     nablaw(r) {
-        var h = this.smoothingRadius;
-        var nabla = 945.0 / (32.0 * Math.PI * Math.pow(h, 9)) * (h * h - r * r) * (7 * r * r - 3 * h * h);
-        return nabla;
+        const h = this.smoothingRadius;
+        return 945.0 / (32.0 * Math.PI * Math.pow(h, 9)) * (h * h - r * r) * (7 * r * r - 3 * h * h);
     }
 }

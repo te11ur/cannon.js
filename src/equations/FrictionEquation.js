@@ -10,6 +10,7 @@ const FrictionEquation_computeB_temp2 = new Vec3();
  * @author schteppe
  */
 export class FrictionEquation extends Equation {
+
     ri = new Vec3();
     rj = new Vec3();
     t = new Vec3(); // tangent
@@ -46,8 +47,6 @@ export class FrictionEquation extends Equation {
         const GW = this.computeGW();
         const GiMf = this.computeGiMf();
 
-        const B = -GW * b - h * GiMf;
-
-        return B;
+        return -GW * b - h * GiMf;
     }
 }

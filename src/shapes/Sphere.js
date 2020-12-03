@@ -30,9 +30,8 @@ export class Sphere extends Shape {
         this.updateBoundingSphereRadius();
     }
 
-    calculateLocalInertia(mass, target) {
-        target = target || new Vec3();
-        var I = 2.0 * mass * this.radius * this.radius / 5.0;
+    calculateLocalInertia(mass, target= new Vec3()) {
+        const I = 2.0 * mass * this.radius * this.radius / 5.0;
         target.x = I;
         target.y = I;
         target.z = I;
@@ -48,10 +47,10 @@ export class Sphere extends Shape {
     }
 
     calculateWorldAABB(pos, quat, min, max) {
-        var r = this.radius;
-        var axes = ['x', 'y', 'z'];
-        for (var i = 0; i < axes.length; i++) {
-            var ax = axes[i];
+        const r = this.radius;
+        const axes = ['x', 'y', 'z'];
+        for (let i = 0; i < axes.length; i++) {
+            const ax = axes[i];
             min[ax] = pos[ax] - r;
             max[ax] = pos[ax] + r;
         }

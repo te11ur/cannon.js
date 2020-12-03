@@ -13,7 +13,8 @@ export class Cylinder extends ConvexPolyhedron {
      * @param {Number} numSegments The number of segments to build the cylinder out of
      */
     constructor(radiusTop, radiusBottom, height, numSegments) {
-        const verts = [],
+        const N = numSegments,
+            verts = [],
             axes = [],
             faces = [],
             bottomface = [],

@@ -71,33 +71,42 @@ export class RigidVehicle {
      * @param {Vec3} [options.axis] Axis of rotation of the wheel, locally defined in the chassis.
      * @param {Body} [options.body] The wheel body.
      */
-    addWheel(options) {
-        options = options || {};
-        var wheelBody = options.body;
-        if (!wheelBody) {
-            wheelBody = new Body(1, new Sphere(1.2));
-        }
+    addWheel(options = {}) {
+        const {
+            body = new Body(1, new Sphere(1.2)),
+            position,
+            axis
+        } = options;
+
+        const wheelBody = body;
         this.wheelBodies.push(wheelBody);
         this.wheelForces.push(0);
 
         // Position constrain wheels
-        var zero = new Vec3();
-        var position = typeof (options.position) !== 'undefined' ? options.position.clone() : new Vec3();
+        const pivotA = new Vec3();
+        const axisAB = new Vec3(0, 1, 0);
+
+        if (position) {
+            pivotA.copy(position);
+        }
+
+        if (axis) {
+            axisAB.copy(axis);
+        }
 
         // Set position locally to the chassis
-        var worldPosition = new Vec3();
-        this.chassisBody.pointToWorldFrame(position, worldPosition);
+        const worldPosition = new Vec3();
+        this.chassisBody.pointToWorldFrame(pivotA, worldPosition);
         wheelBody.position.set(worldPosition.x, worldPosition.y, worldPosition.z);
 
         // Constrain wheel
-        var axis = typeof (options.axis) !== 'undefined' ? options.axis.clone() : new Vec3(0, 1, 0);
-        this.wheelAxes.push(axis);
+        this.wheelAxes.push(axisAB);
 
-        var hingeConstraint = new HingeConstraint(this.chassisBody, wheelBody, {
-            pivotA: position,
-            axisA: axis,
+        const hingeConstraint = new HingeConstraint(this.chassisBody, wheelBody, {
+            pivotA: pivotA,
+            axisA: axisAB,
             pivotB: Vec3.ZERO,
-            axisB: axis,
+            axisB: axisAB,
             collideConnected: false
         });
         this.constraints.push(hingeConstraint);
@@ -109,17 +118,18 @@ export class RigidVehicle {
      * Set the steering value of a wheel.
      * @method setSteeringValue
      * @param {number} value
-     * @param {integer} wheelIndex
+     * @param {int} wheelIndex
      * @todo check coordinateSystem
      */
     setSteeringValue(value, wheelIndex) {
         // Set angle of the hinge axis
-        var axis = this.wheelAxes[wheelIndex];
+        const axis = this.wheelAxes[wheelIndex];
 
-        var c = Math.cos(value),
+        const c = Math.cos(value),
             s = Math.sin(value),
             x = axis.x,
             y = axis.y;
+
         this.constraints[wheelIndex].axisA.set(
             c * x - s * y,
             s * x + c * y,
@@ -131,10 +141,10 @@ export class RigidVehicle {
      * Set the target rotational speed of the hinge constraint.
      * @method setMotorSpeed
      * @param {number} value
-     * @param {integer} wheelIndex
+     * @param {int} wheelIndex
      */
     setMotorSpeed(value, wheelIndex) {
-        var hingeConstraint = this.constraints[wheelIndex];
+        const hingeConstraint = this.constraints[wheelIndex];
         hingeConstraint.enableMotor();
         hingeConstraint.motorTargetVelocity = value;
     }
@@ -142,11 +152,11 @@ export class RigidVehicle {
     /**
      * Set the target rotational speed of the hinge constraint.
      * @method disableMotor
-     * @param {number} value
-     * @param {integer} wheelIndex
+     * @param {number} wheelIndex
+     * @param {int} wheelIndex
      */
     disableMotor(wheelIndex) {
-        var hingeConstraint = this.constraints[wheelIndex];
+        const hingeConstraint = this.constraints[wheelIndex];
         hingeConstraint.disableMotor();
     }
 
@@ -154,7 +164,7 @@ export class RigidVehicle {
      * Set the wheel force to apply on one of the wheels each time step
      * @method setWheelForce
      * @param  {number} value
-     * @param  {integer} wheelIndex
+     * @param  {int} wheelIndex
      */
     setWheelForce(value, wheelIndex) {
         this.wheelForces[wheelIndex] = value;
@@ -164,12 +174,12 @@ export class RigidVehicle {
      * Apply a torque on one of the wheels.
      * @method applyWheelForce
      * @param  {number} value
-     * @param  {integer} wheelIndex
+     * @param  {int} wheelIndex
      */
     applyWheelForce(value, wheelIndex) {
-        var axis = this.wheelAxes[wheelIndex];
-        var wheelBody = this.wheelBodies[wheelIndex];
-        var bodyTorque = wheelBody.torque;
+        const axis = this.wheelAxes[wheelIndex];
+        const wheelBody = this.wheelBodies[wheelIndex];
+        const bodyTorque = wheelBody.torque;
 
         axis.scale(value, torque);
         wheelBody.vectorToWorldFrame(torque, torque);
@@ -182,14 +192,14 @@ export class RigidVehicle {
      * @param {World} world
      */
     addToWorld(world) {
-        var constraints = this.constraints;
-        var bodies = this.wheelBodies.concat([this.chassisBody]);
+        const constraints = this.constraints;
+        const bodies = this.wheelBodies.concat([this.chassisBody]);
 
-        for (var i = 0; i < bodies.length; i++) {
+        for (let i = 0; i < bodies.length; i++) {
             world.addBody(bodies[i]);
         }
 
-        for (var i = 0; i < constraints.length; i++) {
+        for (let i = 0; i < constraints.length; i++) {
             world.addConstraint(constraints[i]);
         }
 
@@ -197,8 +207,8 @@ export class RigidVehicle {
     }
 
     _update() {
-        var wheelForces = this.wheelForces;
-        for (var i = 0; i < wheelForces.length; i++) {
+        const wheelForces = this.wheelForces;
+        for (let i = 0; i < wheelForces.length; i++) {
             this.applyWheelForce(wheelForces[i], i);
         }
     }
@@ -209,14 +219,14 @@ export class RigidVehicle {
      * @param {World} world
      */
     removeFromWorld(world) {
-        var constraints = this.constraints;
-        var bodies = this.wheelBodies.concat([this.chassisBody]);
+        const constraints = this.constraints;
+        const bodies = this.wheelBodies.concat([this.chassisBody]);
 
-        for (var i = 0; i < bodies.length; i++) {
+        for (let i = 0; i < bodies.length; i++) {
             world.remove(bodies[i]);
         }
 
-        for (var i = 0; i < constraints.length; i++) {
+        for (let i = 0; i < constraints.length; i++) {
             world.removeConstraint(constraints[i]);
         }
     }
@@ -224,12 +234,12 @@ export class RigidVehicle {
     /**
      * Get current rotational velocity of a wheel
      * @method getWheelSpeed
-     * @param {integer} wheelIndex
+     * @param {int} wheelIndex
      */
     getWheelSpeed(wheelIndex) {
-        var axis = this.wheelAxes[wheelIndex];
-        var wheelBody = this.wheelBodies[wheelIndex];
-        var w = wheelBody.angularVelocity;
+        const axis = this.wheelAxes[wheelIndex];
+        const wheelBody = this.wheelBodies[wheelIndex];
+        const w = wheelBody.angularVelocity;
         this.chassisBody.vectorToWorldFrame(axis, worldAxis);
         return w.dot(worldAxis);
     }

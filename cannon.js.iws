@@ -2,34 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fe8ec0e7-a8b6-4a7a-9f0a-e3d06fca180e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/Cannon.js" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/shapes/setHeightsFromImage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cannon.js.iws" beforeDir="false" afterPath="$PROJECT_DIR$/cannon.js.iws" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/collision/AABB.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/AABB.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collision/ArrayCollisionMatrix.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/ArrayCollisionMatrix.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collision/Broadphase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/Broadphase.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collision/GridBroadphase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/GridBroadphase.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/collision/NaiveBroadphase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/NaiveBroadphase.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collision/ObjectCollisionMatrix.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/ObjectCollisionMatrix.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/collision/OverlapKeeper.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/OverlapKeeper.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/collision/Ray.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/Ray.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/collision/RaycastResult.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/RaycastResult.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/collision/SAPBroadphase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/collision/SAPBroadphase.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/constraints/ConeTwistConstraint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/ConeTwistConstraint.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/constraints/Constraint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/Constraint.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constraints/DistanceConstraint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/DistanceConstraint.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/constraints/HingeConstraint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/HingeConstraint.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/constraints/LockConstraint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/LockConstraint.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constraints/PointToPointConstraint.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/PointToPointConstraint.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/equations/ConeEquation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/equations/ConeEquation.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/equations/ContactEquation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/equations/ContactEquation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/equations/Equation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/equations/Equation.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/equations/FrictionEquation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/equations/FrictionEquation.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/equations/RotationalEquation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/equations/RotationalEquation.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/equations/RotationalMotorEquation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/equations/RotationalMotorEquation.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/ContactMaterial.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/ContactMaterial.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/Material.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/Material.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/math/JacobianElement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/JacobianElement.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/math/Mat3.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/Mat3.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/math/Quaternion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/Quaternion.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/math/Transform.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/Transform.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/math/Vec3.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/Vec3.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/objects/Body.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/Body.js" afterDir="false" />
@@ -50,12 +42,6 @@
       <change beforePath="$PROJECT_DIR$/src/solver/GSSolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/solver/GSSolver.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/solver/Solver.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/solver/Solver.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/solver/SplitSolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/solver/SplitSolver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/EventTarget.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/EventTarget.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/Octree.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Octree.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/Pool.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Pool.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/TupleDictionary.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/TupleDictionary.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/Utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/Vec3Pool.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Vec3Pool.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/Narrowphase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Narrowphase.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/World.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/World.js" afterDir="false" />
     </list>
@@ -64,6 +50,13 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -78,6 +71,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/demos" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
@@ -110,6 +104,7 @@
       <workItem from="1604993160724" duration="25664000" />
       <workItem from="1605076865733" duration="14372000" />
       <workItem from="1605102520551" duration="100000" />
+      <workItem from="1607006638613" duration="5364000" />
     </task>
     <servers />
   </component>

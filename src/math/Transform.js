@@ -18,11 +18,11 @@ export class Transform {
      */
     quaternion;
 
-    constructor(options) {
+    constructor(options = {}) {
         const {
             position,
             quaternion
-        } = this.options = Object.assign({}, options);
+        } = this.options = options;
 
         this.position = new Vec3();
         this.quaternion = new Quaternion();
@@ -66,7 +66,7 @@ export class Transform {
      * @static
      * @method pointToWorldFrame
      * @param {Vec3} position
-     * @param {Vec3} quaternion
+     * @param {Quaternion} quaternion
      * @param {Vec3} localPoint
      * @param {Vec3} result
      */

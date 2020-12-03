@@ -222,7 +222,7 @@ export class WheelInfo {
      * @param {boolean} [options.useCustomSlidingRotationalSpeed=false]
      * @param {number} [options.customSlidingRotationalSpeed=-0.1]
      */
-    constructor(options) {
+    constructor(options = {}) {
         const {
             chassisConnectionPointLocal,
             chassisConnectionPointWorld,
@@ -287,18 +287,18 @@ export class WheelInfo {
     }
 
     updateWheel(chassis) {
-        var raycastResult = this.raycastResult;
+        const raycastResult = this.raycastResult;
 
         if (this.isInContact) {
-            var project = raycastResult.hitNormalWorld.dot(raycastResult.directionWorld);
+            const project = raycastResult.hitNormalWorld.dot(raycastResult.directionWorld);
             raycastResult.hitPointWorld.vsub(chassis.position, relpos);
             chassis.getVelocityAtWorldPoint(relpos, chassis_velocity_at_contactPoint);
-            var projVel = raycastResult.hitNormalWorld.dot(chassis_velocity_at_contactPoint);
+            const projVel = raycastResult.hitNormalWorld.dot(chassis_velocity_at_contactPoint);
             if (project >= -0.1) {
                 this.suspensionRelativeVelocity = 0.0;
                 this.clippedInvContactDotSuspension = 1.0 / 0.1;
             } else {
-                var inv = -1 / project;
+                const inv = -1 / project;
                 this.suspensionRelativeVelocity = projVel * inv;
                 this.clippedInvContactDotSuspension = inv;
             }

@@ -34,16 +34,19 @@ const World_step_p2 = [];
 
 const additions = [];
 const removals = [];
+
 const beginContactEvent = {
     type: 'beginContact',
     bodyA: null,
     bodyB: null
 };
+
 const endContactEvent = {
     type: 'endContact',
     bodyA: null,
     bodyB: null
 };
+
 const beginShapeContactEvent = {
     type: 'beginShapeContact',
     bodyA: null,
@@ -51,6 +54,7 @@ const beginShapeContactEvent = {
     shapeA: null,
     shapeB: null
 };
+
 const endShapeContactEvent = {
     type: 'endShapeContact',
     bodyA: null,
@@ -252,7 +256,7 @@ export class World extends EventTarget {
      * @param {boolean} [options.quatNormalizeFast]
      * @param {number} [options.quatNormalizeSkip]
      */
-    constructor(options) {
+    constructor(options = {}) {
         super();
 
         const {
@@ -262,7 +266,7 @@ export class World extends EventTarget {
             gravity,
             broadphase = new NaiveBroadphase(),
             solver = new GSSolver()
-        } = Object.assign({}, options);
+        } = options;
 
         this.dt = -1;
         this.allowSleep = !!allowSleep;
@@ -397,7 +401,7 @@ export class World extends EventTarget {
      * @param {Constraint} c
      */
     removeConstraint(c) {
-        var idx = this.constraints.indexOf(c);
+        const idx = this.constraints.indexOf(c);
         if (idx !== -1) {
             this.constraints.splice(idx, 1);
         }
@@ -431,10 +435,6 @@ export class World extends EventTarget {
      * @param  {Vec3} from
      * @param  {Vec3} to
      * @param  {Object} options
-     * @param  {number} [options.collisionFilterMask=-1]
-     * @param  {number} [options.collisionFilterGroup=-1]
-     * @param  {boolean} [options.skipBackfaces=false]
-     * @param  {boolean} [options.checkCollisionResponse=true]
      * @param  {Function} callback
      * @return {boolean} True if any body was hit.
      */
@@ -452,10 +452,6 @@ export class World extends EventTarget {
      * @param  {Vec3} from
      * @param  {Vec3} to
      * @param  {Object} options
-     * @param  {number} [options.collisionFilterMask=-1]
-     * @param  {number} [options.collisionFilterGroup=-1]
-     * @param  {boolean} [options.skipBackfaces=false]
-     * @param  {boolean} [options.checkCollisionResponse=true]
      * @param  {RaycastResult} result
      * @return {boolean} True if any body was hit.
      */
@@ -473,10 +469,6 @@ export class World extends EventTarget {
      * @param  {Vec3} from
      * @param  {Vec3} to
      * @param  {Object} options
-     * @param  {number} [options.collisionFilterMask=-1]
-     * @param  {number} [options.collisionFilterGroup=-1]
-     * @param  {boolean} [options.skipBackfaces=false]
-     * @param  {boolean} [options.checkCollisionResponse=true]
      * @param  {RaycastResult} result
      * @return {boolean} True if any body was hit.
      */
@@ -495,14 +487,15 @@ export class World extends EventTarget {
      */
     removeBody(body) {
         body.world = null;
-        var n = this.bodies.length - 1,
+        const n = this.bodies.length - 1,
             bodies = this.bodies,
             idx = bodies.indexOf(body);
+
         if (idx !== -1) {
             bodies.splice(idx, 1); // Todo: should use a garbage free method
 
             // Recompute index
-            for (var i = 0; i !== bodies.length; i++) {
+            for (let i = 0; i !== bodies.length; i++) {
                 bodies[i].index = i;
             }
 
@@ -519,11 +512,11 @@ export class World extends EventTarget {
 
     // TODO Make a faster map
     getShapeById(id) {
-        var bodies = this.bodies;
-        for (var i = 0, bl = bodies.length; i < bl; i++) {
-            var shapes = bodies[i].shapes;
-            for (var j = 0, sl = shapes.length; j < sl; j++) {
-                var shape = shapes[j];
+        const bodies = this.bodies;
+        for (let i = 0, bl = bodies.length; i < bl; i++) {
+            const shapes = bodies[i].shapes;
+            for (let j = 0, sl = shapes.length; j < sl; j++) {
+                const shape = shapes[j];
                 if (shape.id === id) {
                     return shape;
                 }
@@ -580,7 +573,7 @@ export class World extends EventTarget {
 
         } else {
             this.accumulator += timeSinceLastCalled;
-            var substeps = 0;
+            let substeps = 0;
             while (this.accumulator >= dt && substeps < maxSubSteps) {
                 // Do fixed steps to catch up
                 this.internalStep(dt);
@@ -588,9 +581,9 @@ export class World extends EventTarget {
                 substeps++;
             }
 
-            var t = (this.accumulator % dt) / dt;
-            for (var j = 0; j !== this.bodies.length; j++) {
-                var b = this.bodies[j];
+            const t = (this.accumulator % dt) / dt;
+            for (let j = 0; j !== this.bodies.length; j++) {
+                const b = this.bodies[j];
                 b.previousPosition.lerp(b.position, t, b.interpolatedPosition);
                 b.previousQuaternion.slerp(b.quaternion, t, b.interpolatedQuaternion);
                 b.previousQuaternion.normalize();
@@ -602,9 +595,7 @@ export class World extends EventTarget {
     internalStep(dt) {
         this.dt = dt;
 
-        var world = this,
-            that = this,
-            contacts = this.contacts,
+        const contacts = this.contacts,
             p1 = World_step_p1,
             p2 = World_step_p2,
             N = this.numObjects(),
@@ -614,14 +605,15 @@ export class World extends EventTarget {
             doProfiling = this.doProfiling,
             profile = this.profile,
             DYNAMIC = Body.DYNAMIC,
-            profilingStart,
             constraints = this.constraints,
             frictionEquationPool = World_step_frictionEquationPool,
-            gnorm = gravity.norm(),
             gx = gravity.x,
             gy = gravity.y,
-            gz = gravity.z,
-            i = 0;
+            gz = gravity.z;
+
+
+        let profilingStart;
+        let i;
 
         if (doProfiling) {
             profilingStart = performance.now();
@@ -629,17 +621,20 @@ export class World extends EventTarget {
 
         // Add gravity to all objects
         for (i = 0; i !== N; i++) {
-            var bi = bodies[i];
-            if (bi.type === DYNAMIC) { // Only for dynamic bodies
-                var f = bi.force, m = bi.mass;
-                f.x += m * gx;
-                f.y += m * gy;
-                f.z += m * gz;
+            const bi = bodies[i];
+            if (bi.type === DYNAMIC && bi.enableGravity) { // Only for dynamic bodies
+                const f = bi.force,
+                    m = bi.mass,
+                    gf = bi.gravityFactor;
+
+                f.x += m * gx * gf.x;
+                f.y += m * gy * gf.y;
+                f.z += m * gz * gf.z;
             }
         }
 
         // Update subsystems
-        for (var i = 0, Nsubsystems = this.subsystems.length; i !== Nsubsystems; i++) {
+        for (let i = 0, Nsubsystems = this.subsystems.length; i !== Nsubsystems; i++) {
             this.subsystems[i].update();
         }
 
@@ -655,11 +650,11 @@ export class World extends EventTarget {
         }
 
         // Remove constrained pairs with collideConnected == false
-        var Nconstraints = constraints.length;
+        let Nconstraints = constraints.length;
         for (i = 0; i !== Nconstraints; i++) {
-            var c = constraints[i];
+            const c = constraints[i];
             if (!c.collideConnected) {
-                for (var j = p1.length - 1; j >= 0; j -= 1) {
+                for (let j = p1.length - 1; j >= 0; j -= 1) {
                     if ((c.bodyA === p1[j] && c.bodyB === p2[j]) ||
                         (c.bodyB === p1[j] && c.bodyA === p2[j])) {
                         p1.splice(j, 1);
@@ -675,8 +670,8 @@ export class World extends EventTarget {
         if (doProfiling) {
             profilingStart = performance.now();
         }
-        var oldcontacts = World_step_oldContacts;
-        var NoldContacts = contacts.length;
+        const oldcontacts = World_step_oldContacts;
+        const NoldContacts = contacts.length;
 
         for (i = 0; i !== NoldContacts; i++) {
             oldcontacts.push(contacts[i]);
@@ -684,7 +679,7 @@ export class World extends EventTarget {
         contacts.length = 0;
 
         // Transfer FrictionEquation from current list to the pool for reuse
-        var NoldFrictionEquations = this.frictionEquations.length;
+        const NoldFrictionEquations = this.frictionEquations.length;
         for (i = 0; i !== NoldFrictionEquations; i++) {
             frictionEquationPool.push(this.frictionEquations[i]);
         }
@@ -710,24 +705,24 @@ export class World extends EventTarget {
         }
 
         // Add all friction eqs
-        for (var i = 0; i < this.frictionEquations.length; i++) {
+        for (i = 0; i < this.frictionEquations.length; i++) {
             solver.addEquation(this.frictionEquations[i]);
         }
 
-        var ncontacts = contacts.length;
-        for (var k = 0; k !== ncontacts; k++) {
+        const ncontacts = contacts.length;
+        for (let k = 0; k !== ncontacts; k++) {
 
             // Current contact
-            var c = contacts[k];
+            const c = contacts[k];
 
             // Get current collision indeces
-            var bi = c.bi,
+            const bi = c.bi,
                 bj = c.bj,
                 si = c.si,
                 sj = c.sj;
 
             // Get collision properties
-            var cm;
+            let cm;
             if (bi.material && bj.material) {
                 cm = this.getContactMaterial(bi.material, bj.material) || this.defaultContactMaterial;
             } else {
@@ -736,7 +731,7 @@ export class World extends EventTarget {
 
             // c.enabled = bi.collisionResponse && bj.collisionResponse && si.collisionResponse && sj.collisionResponse;
 
-            var mu = cm.friction;
+            let mu = cm.friction;
             // c.restitution = cm.restitution;
 
             // If friction or restitution were specified in the material, use them
@@ -803,8 +798,8 @@ export class World extends EventTarget {
                 bj.sleepState === Body.AWAKE &&
                 bj.type !== Body.STATIC
             ) {
-                var speedSquaredB = bj.velocity.norm2() + bj.angularVelocity.norm2();
-                var speedLimitSquaredB = Math.pow(bj.sleepSpeedLimit, 2);
+                const speedSquaredB = bj.velocity.norm2() + bj.angularVelocity.norm2();
+                const speedLimitSquaredB = Math.pow(bj.sleepSpeedLimit, 2);
                 if (speedSquaredB >= speedLimitSquaredB * 2) {
                     bi._wakeUpAfterNarrowphase = true;
                 }
@@ -816,8 +811,8 @@ export class World extends EventTarget {
                 bi.sleepState === Body.AWAKE &&
                 bi.type !== Body.STATIC
             ) {
-                var speedSquaredA = bi.velocity.norm2() + bi.angularVelocity.norm2();
-                var speedLimitSquaredA = Math.pow(bi.sleepSpeedLimit, 2);
+                const speedSquaredA = bi.velocity.norm2() + bi.angularVelocity.norm2();
+                const speedLimitSquaredA = Math.pow(bi.sleepSpeedLimit, 2);
                 if (speedSquaredA >= speedLimitSquaredA * 2) {
                     bj._wakeUpAfterNarrowphase = true;
                 }
@@ -850,7 +845,7 @@ export class World extends EventTarget {
 
         // Wake up bodies
         for (i = 0; i !== N; i++) {
-            var bi = bodies[i];
+            const bi = bodies[i];
             if (bi._wakeUpAfterNarrowphase) {
                 bi.wakeUp();
                 bi._wakeUpAfterNarrowphase = false;
@@ -858,12 +853,12 @@ export class World extends EventTarget {
         }
 
         // Add user-added constraints
-        var Nconstraints = constraints.length;
+        Nconstraints = constraints.length;
         for (i = 0; i !== Nconstraints; i++) {
-            var c = constraints[i];
+            const c = constraints[i];
             c.update();
-            for (var j = 0, Neq = c.equations.length; j !== Neq; j++) {
-                var eq = c.equations[j];
+            for (let j = 0, Neq = c.equations.length; j !== Neq; j++) {
+                const eq = c.equations[j];
                 solver.addEquation(eq);
             }
         }
@@ -879,16 +874,16 @@ export class World extends EventTarget {
         solver.removeAllEquations();
 
         // Apply damping, see http://code.google.com/p/bullet/issues/detail?id=74 for details
-        var pow = Math.pow;
+        const pow = Math.pow;
         for (i = 0; i !== N; i++) {
-            var bi = bodies[i];
+            const bi = bodies[i];
             if (bi.type & DYNAMIC) { // Only for dynamic bodies
-                var ld = pow(1.0 - bi.linearDamping, dt);
-                var v = bi.velocity;
+                const ld = pow(1.0 - bi.linearDamping, dt);
+                const v = bi.velocity;
                 v.mult(ld, v);
-                var av = bi.angularVelocity;
+                const av = bi.angularVelocity;
                 if (av) {
-                    var ad = pow(1.0 - bi.angularDamping, dt);
+                    const ad = pow(1.0 - bi.angularDamping, dt);
                     av.mult(ad, av);
                 }
             }
@@ -898,7 +893,7 @@ export class World extends EventTarget {
 
         // Invoke pre-step callbacks
         for (i = 0; i !== N; i++) {
-            var bi = bodies[i];
+            const bi = bodies[i];
             if (bi.preStep) {
                 bi.preStep.call(bi);
             }
@@ -910,9 +905,9 @@ export class World extends EventTarget {
         if (doProfiling) {
             profilingStart = performance.now();
         }
-        var stepnumber = this.stepnumber;
-        var quatNormalize = stepnumber % (this.quatNormalizeSkip + 1) === 0;
-        var quatNormalizeFast = this.quatNormalizeFast;
+        const stepnumber = this.stepnumber;
+        const quatNormalize = stepnumber % (this.quatNormalizeSkip + 1) === 0;
+        const quatNormalizeFast = this.quatNormalizeFast;
 
         for (i = 0; i !== N; i++) {
             bodies[i].integrate(dt, quatNormalize, quatNormalizeFast);
@@ -933,8 +928,8 @@ export class World extends EventTarget {
 
         // Invoke post-step callbacks
         for (i = 0; i !== N; i++) {
-            var bi = bodies[i];
-            var postStep = bi.postStep;
+            const bi = bodies[i];
+            const postStep = bi.postStep;
             if (postStep) {
                 postStep.call(bi);
             }

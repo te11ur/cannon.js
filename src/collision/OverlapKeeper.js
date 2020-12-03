@@ -4,7 +4,6 @@ const unpackAndPush = (array, key) => {
 
 /**
  * @class OverlapKeeper
- * @constructor
  */
 export class OverlapKeeper {
     current = [];

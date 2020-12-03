@@ -78,7 +78,7 @@ export class Spring {
      * @param {Vec3}  [options.localAnchorA] Where to hook the spring to body A, in local body coordinates.
      * @param {Vec3}  [options.localAnchorB]
      */
-    constructor(bodyA, bodyB, options) {
+    constructor(bodyA, bodyB, options = {}) {
         this.bodyA = bodyA;
         this.bodyB = bodyB;
 
@@ -95,7 +95,7 @@ export class Spring {
             restLength,
             stiffness,
             damping
-        } = Object.assign({}, options);
+        } = options;
 
         if (typeof restLength === "number") {
             this.restLength = restLength;
@@ -167,7 +167,7 @@ export class Spring {
      * @method applyForce
      */
     applyForce() {
-        var k = this.stiffness,
+        const k = this.stiffness,
             d = this.damping,
             l = this.restLength,
             bodyA = this.bodyA,
@@ -178,7 +178,7 @@ export class Spring {
             f = applyForce_f,
             tmp = applyForce_tmp;
 
-        var worldAnchorA = applyForce_worldAnchorA,
+        const worldAnchorA = applyForce_worldAnchorA,
             worldAnchorB = applyForce_worldAnchorB,
             ri = applyForce_ri,
             rj = applyForce_rj,
@@ -195,7 +195,7 @@ export class Spring {
 
         // Compute distance vector between world anchor points
         worldAnchorB.vsub(worldAnchorA, r);
-        var rlen = r.norm();
+        const rlen = r.norm();
         r_unit.copy(r);
         r_unit.normalize();
 

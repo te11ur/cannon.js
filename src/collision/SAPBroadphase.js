@@ -4,7 +4,6 @@ import {Broadphase} from '../collision/Broadphase';
  * Sweep and prune broadphase along one axis.
  *
  * @class SAPBroadphase
- * @constructor
  * @extends Broadphase
  */
 export class SAPBroadphase extends Broadphase {
@@ -23,7 +22,7 @@ export class SAPBroadphase extends Broadphase {
     axisIndex = 0;
 
     /**
-     * @param {World} [world]
+     * @param {World} world
      */
     constructor(world) {
         super();

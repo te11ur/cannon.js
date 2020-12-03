@@ -12,21 +12,22 @@ const tmpQuat = new Quaternion();
 const computeAABB_shapeAABB = new AABB();
 const uiw_m1 = new Mat3();
 const uiw_m2 = new Mat3();
-const uiw_m3 = new Mat3();
 const Body_applyForce_rotForce = new Vec3();
 const Body_applyLocalForce_worldForce = new Vec3();
 const Body_applyLocalForce_relativePointWorld = new Vec3();
 const Body_applyImpulse_velo = new Vec3();
 const Body_applyImpulse_rotVelo = new Vec3();
-var Body_applyLocalImpulse_worldImpulse = new Vec3();
+const Body_applyLocalImpulse_worldImpulse = new Vec3();
 const Body_applyLocalImpulse_relativePoint = new Vec3();
 const Body_updateMassProperties_halfExtents = new Vec3();
+
+const Body_velocityAtWorldPoint = new Vec3();
 
 /**
  * Base class for all body types.
  * @class Body
- * @constructor
  * @extends EventTarget
+ * @event collide
  * @example
  *     var body = new Body({
  *         mass: 1
@@ -41,7 +42,6 @@ export class Body extends EventTarget {
     /**
      * Dispatched after two bodies collide. This event is dispatched on each
      * of the two bodies involved in the collision.
-     * @event collide
      * @param {Body} body The body that was involved in the collision.
      * @param {ContactEquation} contact The details of the collision.
      */
@@ -408,7 +408,13 @@ export class Body extends EventTarget {
      */
     boundingRadius;
 
+    enableGravity;
+
+    gravityFactor;
+
     wlambda;
+
+    userData;
 
     /**
      * @param {object} [options]
@@ -430,8 +436,10 @@ export class Body extends EventTarget {
      * @param {Vec3} [options.linearFactor]
      * @param {Vec3} [options.angularFactor]
      * @param {Shape} [options.shape]
+     * @param {boolean} [options.enableGravity]
+     * @param {Object} [options.userData]
      */
-    constructor(options) {
+    constructor(options = {}) {
         super();
 
         this.vlambda = new Vec3();
@@ -464,6 +472,7 @@ export class Body extends EventTarget {
         this.aabbNeedsUpdate = true;
         this.boundingRadius = 0;
         this.wlambda = new Vec3();
+        this.gravityFactor = new Vec3(1, 1, 1);
 
         const {
             collisionFilterGroup = 1,
@@ -483,8 +492,11 @@ export class Body extends EventTarget {
             angularDamping = 0.01,
             linearFactor,
             angularFactor,
-            shape
-        } = Object.assign({}, options);
+            shape,
+            enableGravity = true,
+            gravityFactor,
+            userData = {}
+        } = options;
 
         this.collisionFilterGroup = collisionFilterGroup;
         this.collisionFilterMask = collisionFilterMask;
@@ -497,6 +509,8 @@ export class Body extends EventTarget {
         this._wakeUpAfterNarrowphase = false;
         this.fixedRotation = fixedRotation;
         this.angularDamping = angularDamping;
+        this.enableGravity = enableGravity;
+        this.userData = userData;
 
         if (position) {
             this.position.copy(position);
@@ -543,6 +557,10 @@ export class Body extends EventTarget {
             this.addShape(shape);
         }
 
+        if(gravityFactor) {
+            this.gravityFactor.copy(gravityFactor);
+        }
+
         this.updateMassProperties();
     }
 
@@ -551,7 +569,7 @@ export class Body extends EventTarget {
      * @method wakeUp
      */
     wakeUp() {
-        var s = this.sleepState;
+        const s = this.sleepState;
         this.sleepState = 0;
         this._wakeUpAfterNarrowphase = false;
         if (s === Body.SLEEPING) {
@@ -577,9 +595,9 @@ export class Body extends EventTarget {
      */
     sleepTick(time) {
         if (this.allowSleep) {
-            var sleepState = this.sleepState;
-            var speedSquared = this.velocity.norm2() + this.angularVelocity.norm2();
-            var speedLimitSquared = Math.pow(this.sleepSpeedLimit, 2);
+            const sleepState = this.sleepState;
+            const speedSquared = this.velocity.norm2() + this.angularVelocity.norm2();
+            const speedLimitSquared = Math.pow(this.sleepSpeedLimit, 2);
             if (sleepState === Body.AWAKE && speedSquared < speedLimitSquared) {
                 this.sleepState = Body.SLEEPY; // Sleepy
                 this.timeLastSleepy = time;
@@ -616,8 +634,7 @@ export class Body extends EventTarget {
      * @param  {Vec3} result
      * @return {Vec3}
      */
-    pointToLocalFrame(worldPoint, result) {
-        var result = result || new Vec3();
+    pointToLocalFrame(worldPoint, result = new Vec3()) {
         worldPoint.vsub(this.position, result);
         this.quaternion.conjugate().vmult(result, result);
         return result;
@@ -626,12 +643,11 @@ export class Body extends EventTarget {
     /**
      * Convert a world vector to local body frame.
      * @method vectorToLocalFrame
-     * @param  {Vec3} worldPoint
+     * @param  {Vec3} worldVector
      * @param  {Vec3} result
      * @return {Vec3}
      */
-    vectorToLocalFrame(worldVector, result) {
-        var result = result || new Vec3();
+    vectorToLocalFrame(worldVector, result = new Vec3()) {
         this.quaternion.conjugate().vmult(worldVector, result);
         return result;
     }
@@ -643,8 +659,7 @@ export class Body extends EventTarget {
      * @param  {Vec3} result
      * @return {Vec3}
      */
-    pointToWorldFrame(localPoint, result) {
-        var result = result || new Vec3();
+    pointToWorldFrame(localPoint, result = new Vec3()) {
         this.quaternion.vmult(localPoint, result);
         result.vadd(this.position, result);
         return result;
@@ -657,8 +672,7 @@ export class Body extends EventTarget {
      * @param  {Vec3} result
      * @return {Vec3}
      */
-    vectorToWorldFrame(localVector, result) {
-        var result = result || new Vec3();
+    vectorToWorldFrame(localVector, result = new Vec3()) {
         this.quaternion.vmult(localVector, result);
         return result;
     }
@@ -672,8 +686,8 @@ export class Body extends EventTarget {
      * @return {Body} The body object, for chainability.
      */
     addShape(shape, _offset, _orientation) {
-        var offset = new Vec3();
-        var orientation = new Quaternion();
+        const offset = new Vec3();
+        const orientation = new Quaternion();
 
         if (_offset) {
             offset.copy(_offset);
@@ -700,16 +714,18 @@ export class Body extends EventTarget {
      * @method updateBoundingRadius
      */
     updateBoundingRadius() {
-        var shapes = this.shapes,
+        const shapes = this.shapes,
             shapeOffsets = this.shapeOffsets,
-            N = shapes.length,
-            radius = 0;
+            N = shapes.length;
+        let radius = 0;
 
-        for (var i = 0; i !== N; i++) {
-            var shape = shapes[i];
+        for (let i = 0; i !== N; i++) {
+            const shape = shapes[i];
             shape.updateBoundingSphereRadius();
-            var offset = shapeOffsets[i].norm(),
-                r = shape.boundingSphereRadius;
+
+            const offset = shapeOffsets[i].norm();
+            const r = shape.boundingSphereRadius;
+
             if (offset + r > radius) {
                 radius = offset + r;
             }
@@ -724,7 +740,7 @@ export class Body extends EventTarget {
      * @todo rename to updateAABB()
      */
     computeAABB() {
-        var shapes = this.shapes,
+        const shapes = this.shapes,
             shapeOffsets = this.shapeOffsets,
             shapeOrientations = this.shapeOrientations,
             N = shapes.length,
@@ -734,8 +750,8 @@ export class Body extends EventTarget {
             aabb = this.aabb,
             shapeAABB = computeAABB_shapeAABB;
 
-        for (var i = 0; i !== N; i++) {
-            var shape = shapes[i];
+        for (let i = 0; i !== N; i++) {
+            const shape = shapes[i];
 
             // Get shape world position
             bodyQuat.vmult(shapeOffsets[i], offset);
@@ -760,9 +776,10 @@ export class Body extends EventTarget {
     /**
      * Update .inertiaWorld and .invInertiaWorld
      * @method updateInertiaWorld
+     * @param force {boolean}
      */
     updateInertiaWorld(force) {
-        var I = this.invInertia;
+        const I = this.invInertia;
         if (I.x === I.y && I.y === I.z && !force) {
             // If inertia M = s*I, where I is identity and s a scalar, then
             //    R*M*R' = R*(s*I)*R' = s*R*I*R' = s*R*R' = s*I = M
@@ -770,9 +787,8 @@ export class Body extends EventTarget {
             // In other words, we don't have to transform the inertia if all
             // inertia diagonal entries are equal.
         } else {
-            var m1 = uiw_m1,
-                m2 = uiw_m2,
-                m3 = uiw_m3;
+            const m1 = uiw_m1,
+                m2 = uiw_m2;
             m1.setRotationFromQuaternion(this.quaternion);
             m1.transpose(m2);
             m1.scale(I, m1);
@@ -792,7 +808,7 @@ export class Body extends EventTarget {
         }
 
         // Compute produced rotational force
-        var rotForce = Body_applyForce_rotForce;
+        const rotForce = Body_applyForce_rotForce;
         relativePoint.cross(force, rotForce);
 
         // Add linear force
@@ -805,7 +821,7 @@ export class Body extends EventTarget {
     /**
      * Apply force to a local point in the body.
      * @method applyLocalForce
-     * @param  {Vec3} force The force vector to apply, defined locally in the body frame.
+     * @param  {Vec3} localForce The force vector to apply, defined locally in the body frame.
      * @param  {Vec3} localPoint A local point in the body to apply the force on.
      */
     applyLocalForce(localForce, localPoint) {
@@ -813,8 +829,8 @@ export class Body extends EventTarget {
             return;
         }
 
-        var worldForce = Body_applyLocalForce_worldForce;
-        var relativePointWorld = Body_applyLocalForce_relativePointWorld;
+        const worldForce = Body_applyLocalForce_worldForce;
+        const relativePointWorld = Body_applyLocalForce_relativePointWorld;
 
         // Transform the force vector to world space
         this.vectorToWorldFrame(localForce, worldForce);
@@ -835,10 +851,10 @@ export class Body extends EventTarget {
         }
 
         // Compute point position relative to the body center
-        var r = relativePoint;
+        const r = relativePoint;
 
         // Compute produced central impulse velocity
-        var velo = Body_applyImpulse_velo;
+        const velo = Body_applyImpulse_velo;
         velo.copy(impulse);
         velo.mult(this.invMass, velo);
 
@@ -846,7 +862,7 @@ export class Body extends EventTarget {
         this.velocity.vadd(velo, this.velocity);
 
         // Compute produced rotational impulse velocity
-        var rotVelo = Body_applyImpulse_rotVelo;
+        const rotVelo = Body_applyImpulse_rotVelo;
         r.cross(impulse, rotVelo);
 
         /*
@@ -863,7 +879,7 @@ export class Body extends EventTarget {
     /**
      * Apply locally-defined impulse to a local point in the body.
      * @method applyLocalImpulse
-     * @param  {Vec3} force The force vector to apply, defined locally in the body frame.
+     * @param  {Vec3} localImpulse The force vector to apply, defined locally in the body frame.
      * @param  {Vec3} localPoint A local point in the body to apply the force on.
      */
     applyLocalImpulse(localImpulse, localPoint) {
@@ -871,8 +887,8 @@ export class Body extends EventTarget {
             return;
         }
 
-        var worldImpulse = Body_applyLocalImpulse_worldImpulse;
-        var relativePointWorld = Body_applyLocalImpulse_relativePoint;
+        const worldImpulse = Body_applyLocalImpulse_worldImpulse;
+        const relativePointWorld = Body_applyLocalImpulse_relativePoint;
 
         // Transform the force vector to world space
         this.vectorToWorldFrame(localImpulse, worldImpulse);
@@ -886,11 +902,11 @@ export class Body extends EventTarget {
      * @method updateMassProperties
      */
     updateMassProperties() {
-        var halfExtents = Body_updateMassProperties_halfExtents;
+        const halfExtents = Body_updateMassProperties_halfExtents;
 
         this.invMass = this.mass > 0 ? 1.0 / this.mass : 0;
-        var I = this.inertia;
-        var fixed = this.fixedRotation;
+        const I = this.inertia;
+        const fixed = this.fixedRotation;
 
         // Approximate with AABB box
         this.computeAABB();
@@ -916,10 +932,9 @@ export class Body extends EventTarget {
      * @param  {Vec3} result
      * @return {Vec3} The result vector.
      */
-    getVelocityAtWorldPoint(worldPoint, result) {
-        var r = new Vec3();
-        worldPoint.vsub(this.position, r);
-        this.angularVelocity.cross(r, result);
+    getVelocityAtWorldPoint(worldPoint, result = new Vec3()) {
+        worldPoint.vsub(this.position, Body_velocityAtWorldPoint);
+        this.angularVelocity.cross(Body_velocityAtWorldPoint, result);
         this.velocity.vadd(result, result);
         return result;
     }
@@ -940,7 +955,7 @@ export class Body extends EventTarget {
             return;
         }
 
-        var velo = this.velocity,
+        const velo = this.velocity,
             angularVelo = this.angularVelocity,
             pos = this.position,
             force = this.force,
@@ -950,16 +965,16 @@ export class Body extends EventTarget {
             invInertia = this.invInertiaWorld,
             linearFactor = this.linearFactor;
 
-        var iMdt = invMass * dt;
+        const iMdt = invMass * dt;
         velo.x += force.x * iMdt * linearFactor.x;
         velo.y += force.y * iMdt * linearFactor.y;
         velo.z += force.z * iMdt * linearFactor.z;
 
-        var e = invInertia.elements;
-        var angularFactor = this.angularFactor;
-        var tx = torque.x * angularFactor.x;
-        var ty = torque.y * angularFactor.y;
-        var tz = torque.z * angularFactor.z;
+        const e = invInertia.elements;
+        const angularFactor = this.angularFactor;
+        const tx = torque.x * angularFactor.x;
+        const ty = torque.y * angularFactor.y;
+        const tz = torque.z * angularFactor.z;
         angularVelo.x += dt * (e[0] * tx + e[1] * ty + e[2] * tz);
         angularVelo.y += dt * (e[3] * tx + e[4] * ty + e[5] * tz);
         angularVelo.z += dt * (e[6] * tx + e[7] * ty + e[8] * tz);

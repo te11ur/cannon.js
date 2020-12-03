@@ -155,7 +155,7 @@ export class Ray {
      * @param  {object} options
      * @return {Boolean} True if the ray hit anything, otherwise false.
      */
-    intersectWorld(world, options) {
+    intersectWorld(world, options = {}) {
         const {
             mode = Ray.ANY,
             result = new RaycastResult(),
@@ -166,7 +166,7 @@ export class Ray {
             to,
             callback = result => {
             },
-        } = Object.assign({}, options);
+        } = options;
 
         this.mode = mode;
         this.result = result;

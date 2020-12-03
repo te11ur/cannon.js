@@ -3,8 +3,6 @@ import {Vec3} from "./Vec3";
 /**
  * A 3x3 matrix.
  * @class Mat3
- * @constructor
- * @param array elements Array of nine elements. Optional.
  * @author schteppe / http://github.com/schteppe
  */
 export class Mat3 {
@@ -12,12 +10,13 @@ export class Mat3 {
      * A vector of length 9, containing all matrix elements
      * @property {Array} elements
      */
-    constructor(elements) {
-        if (elements) {
-            this.elements = elements;
-        } else {
-            this.elements = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-        }
+    elements;
+
+    /**
+     * @param {array} elements Array of nine elements. Optional.
+     */
+    constructor(elements = [0, 0, 0, 0, 0, 0, 0, 0, 0]) {
+        this.elements = elements;
     }
 
     /**

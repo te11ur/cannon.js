@@ -36,10 +36,10 @@ export class LockConstraint extends PointToPointConstraint {
      * @param {object} [options]
      * @param {Number} [options.maxForce=1e6]
      */
-    constructor(bodyA, bodyB, options) {
+    constructor(bodyA, bodyB, options = {}) {
         const {
             maxForce = 1e6
-        } = Object.assign({}, options);
+        } = options;
 
         // Set pivot point in between
         const pivotA = new Vec3();

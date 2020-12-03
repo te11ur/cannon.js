@@ -118,6 +118,7 @@ export class Vec3 {
         target.x = v.x + this.x;
         target.y = v.y + this.y;
         target.z = v.z + this.z;
+        return target;
     }
 
     /**
@@ -261,7 +262,6 @@ export class Vec3 {
      * @param {Number} scalar
      * @param {Vec3} target The vector to save the result in.
      * @return {Vec3}
-     * @deprecated Use .scale() instead
      */
     mult(scalar, target = new Vec3()) {
         const x = this.x,

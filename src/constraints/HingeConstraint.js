@@ -50,7 +50,7 @@ export class HingeConstraint extends PointToPointConstraint {
      * @param {Vec3} [options.axisB]
      * @param {Number} [options.maxForce=1e6]
      */
-    constructor(bodyA, bodyB, options) {
+    constructor(bodyA, bodyB, options = {}) {
         let {
             maxForce = 1e6,
             pivotA,
@@ -64,33 +64,14 @@ export class HingeConstraint extends PointToPointConstraint {
 
         super(bodyA, pivotA, bodyB, pivotB, maxForce);
 
-        /**
-         * Rotation axis, defined locally in bodyA.
-         * @property {Vec3} axisA
-         */
         this.axisA = axisA = axisA ? axisA.clone() : new Vec3(1, 0, 0);
         axisA.normalize();
 
-        /**
-         * Rotation axis, defined locally in bodyB.
-         * @property {Vec3} axisB
-         */
         this.axisB = axisB = axisB ? axisB.clone() : new Vec3(1, 0, 0);
         axisB.normalize();
 
-        /**
-         * @property {RotationalEquation} rotationalEquation1
-         */
         const r1 = this.rotationalEquation1 = new RotationalEquation(bodyA, bodyB, options);
-
-        /**
-         * @property {RotationalEquation} rotationalEquation2
-         */
         const r2 = this.rotationalEquation2 = new RotationalEquation(bodyA, bodyB, options);
-
-        /**
-         * @property {RotationalMotorEquation} motorEquation
-         */
         const motor = this.motorEquation = new RotationalMotorEquation(bodyA, bodyB, maxForce);
         motor.enabled = false; // Not enabled by default
 

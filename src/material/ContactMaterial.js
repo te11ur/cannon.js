@@ -65,17 +65,24 @@ export class ContactMaterial {
      * @param {number} [options.frictionEquationStiffness=1e7]
      * @param {Number} [options.frictionEquationRelaxation=3]
      */
-    constructor(m1, m2, options) {
+    constructor(m1, m2, options = {}) {
 
         this.materials = [m1, m2];
 
-        Object.assign(this, {
-            friction: 0.3,
-            restitution: 0.3,
-            contactEquationStiffness: 1e7,
-            contactEquationRelaxation: 3,
-            frictionEquationStiffness: 1e7,
-            frictionEquationRelaxation: 3
-        }, options);
+        const {
+            friction = 0.3,
+            restitution = 0.3,
+            contactEquationStiffness = 1e7,
+            contactEquationRelaxation = 3,
+            frictionEquationStiffness = 1e7,
+            frictionEquationRelaxation = 3
+        } = options;
+
+        this.friction = friction;
+        this.restitution = restitution;
+        this.contactEquationStiffness = contactEquationStiffness;
+        this.contactEquationRelaxation = contactEquationRelaxation;
+        this.frictionEquationStiffness = frictionEquationStiffness;
+        this.frictionEquationRelaxation = frictionEquationRelaxation;
     }
 }

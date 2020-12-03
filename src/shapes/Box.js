@@ -51,12 +51,12 @@ export class Box extends Shape {
      * @method updateConvexPolyhedronRepresentation
      */
     updateConvexPolyhedronRepresentation() {
-        var sx = this.halfExtents.x;
-        var sy = this.halfExtents.y;
-        var sz = this.halfExtents.z;
-        var V = Vec3;
+        const sx = this.halfExtents.x;
+        const sy = this.halfExtents.y;
+        const sz = this.halfExtents.z;
+        const V = Vec3;
 
-        var vertices = [
+        const vertices = [
             new V(-sx, -sy, -sz),
             new V(sx, -sy, -sz),
             new V(sx, sy, -sz),
@@ -67,7 +67,7 @@ export class Box extends Shape {
             new V(-sx, sy, sz)
         ];
 
-        var indices = [
+        const indices = [
             [3, 2, 1, 0], // -z
             [4, 5, 6, 7], // +z
             [5, 4, 0, 1], // -y
@@ -76,13 +76,7 @@ export class Box extends Shape {
             [1, 2, 6, 5], // +x
         ];
 
-        var axes = [
-            new V(0, 0, 1),
-            new V(0, 1, 0),
-            new V(1, 0, 0)
-        ];
-
-        var h = new ConvexPolyhedron(vertices, indices);
+        const h = new ConvexPolyhedron(vertices, indices);
         this.convexPolyhedronRepresentation = h;
         h.material = this.material;
     }
@@ -93,14 +87,13 @@ export class Box extends Shape {
      * @param  {Vec3} target
      * @return {Vec3}
      */
-    calculateLocalInertia(mass, target) {
-        target = target || new Vec3();
+    calculateLocalInertia(mass, target = new Vec3()) {
         Box.calculateInertia(this.halfExtents, mass, target);
         return target;
     }
 
     static calculateInertia(halfExtents, mass, target) {
-        var e = halfExtents;
+        const e = halfExtents;
         target.x = 1.0 / 12.0 * mass * (2 * e.y * 2 * e.y + 2 * e.z * 2 * e.z);
         target.y = 1.0 / 12.0 * mass * (2 * e.x * 2 * e.x + 2 * e.z * 2 * e.z);
         target.z = 1.0 / 12.0 * mass * (2 * e.y * 2 * e.y + 2 * e.x * 2 * e.x);
@@ -114,8 +107,8 @@ export class Box extends Shape {
      * @return {array}
      */
     getSideNormals(sixTargetVectors, quat) {
-        var sides = sixTargetVectors;
-        var ex = this.halfExtents;
+        const sides = sixTargetVectors;
+        const ex = this.halfExtents;
         sides[0].set(ex.x, 0, 0);
         sides[1].set(0, ex.y, 0);
         sides[2].set(0, 0, ex.z);
@@ -124,7 +117,7 @@ export class Box extends Shape {
         sides[5].set(0, 0, -ex.z);
 
         if (quat !== undefined) {
-            for (var i = 0; i !== sides.length; i++) {
+            for (let i = 0; i !== sides.length; i++) {
                 quat.vmult(sides[i], sides[i]);
             }
         }
@@ -141,17 +134,19 @@ export class Box extends Shape {
     }
 
     forEachWorldCorner(pos, quat, callback) {
-
-        var e = this.halfExtents;
-        var corners = [[e.x, e.y, e.z],
+        const e = this.halfExtents;
+        const corners = [
+            [e.x, e.y, e.z],
             [-e.x, e.y, e.z],
             [-e.x, -e.y, e.z],
             [-e.x, -e.y, -e.z],
             [e.x, -e.y, -e.z],
             [e.x, e.y, -e.z],
             [-e.x, e.y, -e.z],
-            [e.x, -e.y, e.z]];
-        for (var i = 0; i < corners.length; i++) {
+            [e.x, -e.y, e.z]
+        ];
+
+        for (let i = 0; i < corners.length; i++) {
             worldCornerTempPos.set(corners[i][0], corners[i][1], corners[i][2]);
             quat.vmult(worldCornerTempPos, worldCornerTempPos);
             pos.vadd(worldCornerTempPos, worldCornerTempPos);
@@ -162,8 +157,7 @@ export class Box extends Shape {
     }
 
     calculateWorldAABB(pos, quat, min, max) {
-
-        var e = this.halfExtents;
+        const e = this.halfExtents;
         worldCornersTemp[0].set(e.x, e.y, e.z);
         worldCornersTemp[1].set(-e.x, e.y, e.z);
         worldCornersTemp[2].set(-e.x, -e.y, e.z);
@@ -173,18 +167,20 @@ export class Box extends Shape {
         worldCornersTemp[6].set(-e.x, e.y, -e.z);
         worldCornersTemp[7].set(e.x, -e.y, e.z);
 
-        var wc = worldCornersTemp[0];
+        let wc = worldCornersTemp[0];
         quat.vmult(wc, wc);
         pos.vadd(wc, wc);
         max.copy(wc);
         min.copy(wc);
-        for (var i = 1; i < 8; i++) {
-            var wc = worldCornersTemp[i];
+        for (let i = 1; i < 8; i++) {
+            wc = worldCornersTemp[i];
             quat.vmult(wc, wc);
             pos.vadd(wc, wc);
-            var x = wc.x;
-            var y = wc.y;
-            var z = wc.z;
+
+            const x = wc.x;
+            const y = wc.y;
+            const z = wc.z;
+
             if (x > max.x) {
                 max.x = x;
             }

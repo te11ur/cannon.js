@@ -58,9 +58,7 @@ export class RotationalMotorEquation extends Equation {
         const GW = this.computeGW() - this.targetVelocity,
             GiMf = this.computeGiMf();
 
-        const B = -GW * b - h * GiMf;
-
-        return B;
+        return -GW * b - h * GiMf;
     }
 }
 

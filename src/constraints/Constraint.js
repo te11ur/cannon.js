@@ -41,11 +41,11 @@ export class Constraint {
      * @param {boolean} [options.collideConnected=true]
      * @param {boolean} [options.wakeUpBodies=true]
      */
-    constructor(bodyA, bodyB, options) {
+    constructor(bodyA, bodyB, options = {}) {
         const {
             collideConnected = true,
             wakeUpBodies = true,
-        } = Object.assign({}, options);
+        } = options;
 
         this.equations = [];
         this.bodyA = bodyA;

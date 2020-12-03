@@ -31,7 +31,7 @@ export class ConeTwistConstraint extends PointToPointConstraint {
      * @param {Vec3} [options.axisB]
      * @param {Number} [options.maxForce=1e6]
      */
-    constructor(bodyA, bodyB, options) {
+    constructor(bodyA, bodyB, options = {}) {
         let {
             maxForce = 1e6,
             pivotA,
@@ -41,7 +41,7 @@ export class ConeTwistConstraint extends PointToPointConstraint {
             collideConnected,
             angle = 0,
             twistAngle = 0
-        } = Object.assign({}, options);
+        } = options;
 
         // Set pivot point in between
         pivotA = pivotA ? pivotA.clone() : new Vec3();

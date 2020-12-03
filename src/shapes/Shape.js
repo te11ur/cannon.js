@@ -80,14 +80,14 @@ export class Shape {
      * @param {number} [options.collisionResponse=true]
      * @param {number} [options.material=null]
      */
-    constructor(options) {
+    constructor(options = {}) {
         const {
             type = 0,
             collisionFilterGroup = 1,
             collisionFilterMask = -1,
             collisionResponse = true,
             material = null
-        } = Object.assign({}, options);
+        } = options;
 
         this.type = type;
         this.boundingSphereRadius = 0;

@@ -33,13 +33,13 @@ export class ConeEquation extends Equation {
      * @param {Vec3} [options.angle] The "cone angle" to keep
      * @param {number} [options.maxForce=1e6]
      */
-    constructor(bodyA, bodyB, options) {
+    constructor(bodyA, bodyB, options = {}) {
         const {
             maxForce = 1e6,
             angle = 0,
             axisA,
             axisB
-        } = Object.assign({}, options);
+        } = options;
 
         super(bodyA, bodyB, -maxForce, maxForce);
 
@@ -84,9 +84,7 @@ export class ConeEquation extends Equation {
             GW = this.computeGW(),
             GiMf = this.computeGiMf();
 
-        const B = -g * a - GW * b - h * GiMf;
-
-        return B;
+        return -g * a - GW * b - h * GiMf;
     }
 }
 

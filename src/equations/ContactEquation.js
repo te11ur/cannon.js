@@ -106,9 +106,7 @@ export class ContactEquation extends Equation {
         const GW = ePlusOne * vj.dot(n) - ePlusOne * vi.dot(n) + wj.dot(rjxn) - wi.dot(rixn);
         const GiMf = this.computeGiMf();
 
-        const B = -g * a - GW * b - h * GiMf;
-
-        return B;
+        return -g * a - GW * b - h * GiMf;
     }
 
     /**

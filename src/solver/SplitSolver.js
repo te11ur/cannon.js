@@ -9,9 +9,9 @@ const SplitSolver_solve_dummyWorld = {bodies: []}; // Temp object
 const STATIC = Body.STATIC;
 
 const getUnvisitedNode = nodes => {
-    var Nnodes = nodes.length;
-    for (var i = 0; i !== Nnodes; i++) {
-        var node = nodes[i];
+    const Nnodes = nodes.length;
+    for (let i = 0; i !== Nnodes; i++) {
+        const node = nodes[i];
         if (!node.visited && !(node.body.type & STATIC)) {
             return node;
         }
@@ -25,9 +25,9 @@ const bfs = (root, visitFunc, bds, eqs) => {
     root.visited = true;
     visitFunc(root, bds, eqs);
     while (queue.length) {
-        var node = queue.pop();
+        const node = queue.pop();
         // Loop over unvisited child nodes
-        var child;
+        let child;
         while ((child = getUnvisitedNode(node.children))) {
             child.visited = true;
             visitFunc(child, bds, eqs);
@@ -38,9 +38,9 @@ const bfs = (root, visitFunc, bds, eqs) => {
 
 const visitFunc = (node, bds, eqs) => {
     bds.push(node.body);
-    var Neqs = node.eqs.length;
-    for (var i = 0; i !== Neqs; i++) {
-        var eq = node.eqs[i];
+    const Neqs = node.eqs.length;
+    for (let i = 0; i !== Neqs; i++) {
+        const eq = node.eqs[i];
         if (eqs.indexOf(eq) === -1) {
             eqs.push(eq);
         }
@@ -90,7 +90,7 @@ export class SplitSolver extends Solver {
      * @param  {World} world
      */
     solve(dt, world) {
-        var nodes = SplitSolver_solve_nodes,
+        const nodes = SplitSolver_solve_nodes,
             nodePool = this.nodePool,
             bodies = world.bodies,
             equations = this.equations,
@@ -103,20 +103,20 @@ export class SplitSolver extends Solver {
             nodePool.push(this.createNode());
         }
         nodes.length = Nbodies;
-        for (var i = 0; i < Nbodies; i++) {
+        for (let i = 0; i < Nbodies; i++) {
             nodes[i] = nodePool[i];
         }
 
         // Reset node values
-        for (var i = 0; i !== Nbodies; i++) {
-            var node = nodes[i];
+        for (let i = 0; i !== Nbodies; i++) {
+            const node = nodes[i];
             node.body = bodies[i];
             node.children.length = 0;
             node.eqs.length = 0;
             node.visited = false;
         }
-        for (var k = 0; k !== Neq; k++) {
-            var eq = equations[k],
+        for (let k = 0; k !== Neq; k++) {
+            const eq = equations[k],
                 i = bodies.indexOf(eq.bi),
                 j = bodies.indexOf(eq.bj),
                 ni = nodes[i],
@@ -127,26 +127,26 @@ export class SplitSolver extends Solver {
             nj.eqs.push(eq);
         }
 
-        var child, n = 0, eqs = SplitSolver_solve_eqs;
+        let child, n = 0, eqs = SplitSolver_solve_eqs;
 
         subsolver.tolerance = this.tolerance;
         subsolver.iterations = this.iterations;
 
-        var dummyWorld = SplitSolver_solve_dummyWorld;
+        const dummyWorld = SplitSolver_solve_dummyWorld;
         while ((child = getUnvisitedNode(nodes))) {
             eqs.length = 0;
             dummyWorld.bodies.length = 0;
             bfs(child, visitFunc, dummyWorld.bodies, eqs);
 
-            var Neqs = eqs.length;
+            const Neqs = eqs.length;
 
             eqs = eqs.sort(sortById);
 
-            for (var i = 0; i !== Neqs; i++) {
+            for (let i = 0; i !== Neqs; i++) {
                 subsolver.addEquation(eqs[i]);
             }
 
-            var iter = subsolver.solve(dt, dummyWorld);
+            const iter = subsolver.solve(dt, dummyWorld);
             subsolver.removeAllEquations();
             n++;
         }

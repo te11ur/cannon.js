@@ -20,8 +20,7 @@ export class Particle extends Shape {
      * @param  {Vec3} target
      * @return {Vec3}
      */
-    calculateLocalInertia(mass, target) {
-        target = target || new Vec3();
+    calculateLocalInertia(mass, target = new Vec3()) {
         target.set(0, 0, 0);
         return target;
     }

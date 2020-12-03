@@ -17,16 +17,17 @@ export class RotationalEquation extends Equation {
     /**
      * @param {Body} bodyA
      * @param {Body} bodyB
+     * @param {Object} [options]
      * @param {Vec3} [options.axisA]
      * @param {Vec3} [options.axisB]
      * @param {number} [options.maxForce]
      */
-    constructor(bodyA, bodyB, options) {
+    constructor(bodyA, bodyB, options = {}) {
         const {
             maxForce = 1e6,
             axisA,
             axisB
-        } = Object.assign({}, options);
+        } = options;
 
         super(bodyA, bodyB, -maxForce, maxForce);
 
@@ -71,9 +72,7 @@ export class RotationalEquation extends Equation {
             GW = this.computeGW(),
             GiMf = this.computeGiMf();
 
-        const B = -g * a - GW * b - h * GiMf;
-
-        return B;
+        return -g * a - GW * b - h * GiMf;
     }
 }
 

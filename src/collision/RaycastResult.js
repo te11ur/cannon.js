@@ -3,10 +3,8 @@ import {Vec3} from '../math/Vec3';
 /**
  * Storage for Ray casting data.
  * @class RaycastResult
- * @constructor
  */
 export class RaycastResult {
-
     /**
      * @property {Vec3} rayFromWorld
      */
